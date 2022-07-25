@@ -3,7 +3,8 @@
 * Todo App.
 ## video
 
-[<img src="github_assets/video_thum.jpg">](https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
+[<img src="github_assets/video_thum.jpg">](https://youtu.be/9nxOKvtX4V4"
+Now in Android: 24 or above")
 
 
 ## images
