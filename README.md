@@ -3,8 +3,8 @@
 * Todo App.
 ## video
 
-<video src="github_assets/video.mp4" controls="controls" style="max-height: 520px; max-width:520">
-</video>
+[<img src="github_assets/video_thum.jpg">](https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
+
 
 ## images
 # All Tasks
