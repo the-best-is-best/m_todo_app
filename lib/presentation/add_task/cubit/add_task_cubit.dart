@@ -59,6 +59,7 @@ class AddTaskCubit extends Cubit<AddTaskState> {
 
   void addColor(String color) {
     addTaskFreezed = addTaskFreezed.copyWith(color: color);
+    print(addTaskFreezed.color);
     emit(AddTaskChangeTaskColor());
   }
 

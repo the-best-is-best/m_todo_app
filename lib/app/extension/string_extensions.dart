@@ -5,7 +5,9 @@ import '../constant.dart';
 
 extension ExtensionString on String {
   TimeOfDay convertTimeStringToTimeOfDay() {
-    DateTime dateTime = DateFormat("hh:mm a").parse(this);
+    DateTime dateTime = DateFormat(
+      "hh:mm a",
+    ).parse(replaceAll('م', 'PM').replaceAll('ص', 'AM'));
 
     return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
   }
@@ -23,7 +25,8 @@ extension ExtensionString on String {
   }
 
   DateTime toDateTime() {
-    DateTime outputDate = DateFormat('yyyy/MM/dd hh:mm a').parse(this);
+    DateTime outputDate = DateFormat('yyyy/MM/dd hh:mm a')
+        .parse(replaceAll('م', 'PM').replaceAll('ص', 'AM'));
     return outputDate;
   }
 }

@@ -1,5 +1,5 @@
 {
-    "appTitle": "ام نودو",
+    "appTitle": "ام تودو",
     "homeTitle": "الرائيسية",
     "all": "الكل",
     "completed": "مكتمل",
@@ -25,7 +25,7 @@
     "thirtyMinBefore": "قبل 30 دقيقة",
     "oneHourBefore": "قبل ساعة واحدة",
     "oneDayBefore": "قبل يوم واحد",
-    "selectColorTask": "حدد مهمة اللون",
+    "selectColorTask": "حدد لون المهمة",
     "red": "أحمر",
     "blue": "أزرق",
     "orange": "البرتقالي",
@@ -33,5 +33,7 @@
     "search": "بحث",
     "schedule": "جدول",
     "detailsTask": "تفاصيل المهمة",
-    "updateATask": "حدث هذه المهمة"
+    "updateATask": "حدث هذه المهمة",
+    "noTasksAvailable": "لا توجد مهام متاحة",
+    "save": "حفظ"
 }

@@ -33,5 +33,7 @@
     "search": "Search",
     "schedule": "Schedule",
     "detailsTask": "Details Task",
-    "updateATask": "Update this Task"
+    "updateATask": "Update this Task",
+    "noTasksAvailable": "No Tasks Available",
+    "save": "Save"
 }

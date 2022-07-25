@@ -59,4 +59,31 @@ extension ExtensionBuildContext on BuildContext {
 
   double get width => MediaQuery.of(this).size.width;
   double get height => MediaQuery.of(this).size.height;
+
+  Future<void> showAlerts<T>(
+      {required String title,
+      required TextStyle textStyle,
+      TextStyle? contentTextStyle,
+      required EdgeInsetsGeometry paddingTitle,
+      required List<Widget> content,
+      bool barrierDismissible = false,
+      List<Widget>? actions,
+      Color? backgroundColor}) {
+    return showDialog<T>(
+      context: this,
+      barrierDismissible: barrierDismissible,
+      builder: (BuildContext context) => AlertDialog(
+        titlePadding: paddingTitle,
+        titleTextStyle: textStyle,
+        contentTextStyle: contentTextStyle ?? textStyle,
+        backgroundColor: backgroundColor,
+        title: Center(child: Text(title)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: content,
+        ),
+        actions: actions,
+      ),
+    );
+  }
 }

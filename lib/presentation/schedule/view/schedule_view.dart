@@ -11,8 +11,22 @@ import 'package:m_todo_app/presentation/schedule/cubit/schedule_states.dart';
 import '../../../app/cubit/app_cubit.dart';
 import '../../home/view/widgets/success_icon_tasks.dart';
 
-class ScheduleView extends StatelessWidget {
+class ScheduleView extends StatefulWidget {
   const ScheduleView({Key? key}) : super(key: key);
+
+  @override
+  State<ScheduleView> createState() => _ScheduleViewState();
+}
+
+class _ScheduleViewState extends State<ScheduleView> {
+  final DatePickerController _datePickerController = DatePickerController();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _datePickerController.jumpToSelection();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +51,9 @@ class ScheduleView extends StatelessWidget {
                     const Divider(),
                     DatePicker(
                       appCubit.allTasks.isNotEmpty
-                          ? appCubit.allTasks[0].date.toDate()
+                          ? appCubit.allTasks[0].date
+                              .toDate()
+                              .add(const Duration(days: -360))
                           : DateTime.now(),
                       daysCount: appCubit.totalDays,
                       initialSelectedDate: appCubit.allTasks.isNotEmpty
@@ -55,6 +71,7 @@ class ScheduleView extends StatelessWidget {
                       onDateChange: (date) {
                         scheduleCubit.getTasksByDate(date);
                       },
+                      controller: _datePickerController,
                     ),
                     const SizedBox(height: AppSize.ap8),
                     Container(
@@ -66,89 +83,91 @@ class ScheduleView extends StatelessWidget {
                 ),
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.only(
-                  top: AppSize.ap12, left: AppSize.ap12, right: AppSize.ap12),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        scheduleCubit.dayName,
-                        style: getMediumStyle(),
-                      ),
-                      Text(
-                        scheduleCubit.dateSelected,
-                        style: getRegularStyle(),
-                      )
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.all(AppSize.ap12)),
-                  SizedBox(
-                    height: context.height * .7,
-                    child: ListView.separated(
-                      itemCount: scheduleCubit.tasksInDate.length,
-                      itemBuilder: (context, index) => Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: AppSize.ap12, left: AppSize.ap12, right: AppSize.ap12),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          scheduleCubit.dayName,
+                          style: getMediumStyle(),
                         ),
-                        color: scheduleCubit.tasksInDate[index].color
-                            .convertToColor(),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSize.ap12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        scheduleCubit
-                                            .tasksInDate[index].startTime,
-                                        style: getMediumStyle(
-                                            color: Colors.white,
-                                            fontSize: FontSize.s18),
-                                      ),
-                                      const SizedBox(width: AppSize.ap12),
-                                      Container(
-                                          width: 10,
-                                          height: 2,
-                                          color: Colors.white70),
-                                      const SizedBox(width: AppSize.ap12),
-                                      Text(
-                                        scheduleCubit
-                                            .tasksInDate[index].endTime,
-                                        style: getMediumStyle(
-                                            color: Colors.white,
-                                            fontSize: FontSize.s18),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: AppSize.ap12),
-                                  Text(
-                                    scheduleCubit.tasksInDate[index].title,
-                                    style: getMediumStyle(
-                                        color: Colors.white,
-                                        fontSize: FontSize.s24),
-                                  )
-                                ],
-                              ),
-                              IconSuccess(
-                                tasks: scheduleCubit.tasksInDate[index],
-                              )
-                            ],
+                        Text(
+                          scheduleCubit.dateSelected,
+                          style: getRegularStyle(),
+                        )
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(AppSize.ap12)),
+                    SizedBox(
+                      height: context.height * .65,
+                      child: ListView.separated(
+                        itemCount: scheduleCubit.tasksInDate.length,
+                        itemBuilder: (context, index) => Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: scheduleCubit.tasksInDate[index].color
+                              .convertToColor(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSize.ap12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          scheduleCubit
+                                              .tasksInDate[index].startTime,
+                                          style: getMediumStyle(
+                                              color: Colors.white,
+                                              fontSize: FontSize.s18),
+                                        ),
+                                        const SizedBox(width: AppSize.ap12),
+                                        Container(
+                                            width: 10,
+                                            height: 2,
+                                            color: Colors.white70),
+                                        const SizedBox(width: AppSize.ap12),
+                                        Text(
+                                          scheduleCubit
+                                              .tasksInDate[index].endTime,
+                                          style: getMediumStyle(
+                                              color: Colors.white,
+                                              fontSize: FontSize.s18),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: AppSize.ap12),
+                                    Text(
+                                      scheduleCubit.tasksInDate[index].title,
+                                      style: getMediumStyle(
+                                          color: Colors.white,
+                                          fontSize: FontSize.s24),
+                                    )
+                                  ],
+                                ),
+                                IconSuccess(
+                                  tasks: scheduleCubit.tasksInDate[index],
+                                )
+                              ],
+                            ),
                           ),
                         ),
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(height: AppSize.ap12);
+                        },
                       ),
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(height: AppSize.ap12);
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

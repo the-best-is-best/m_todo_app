@@ -14,7 +14,7 @@ class AppCubit extends Cubit<AppStates> {
   List<TasksModel> completedTasks = [];
   List<TasksModel> unCompletedTasks = [];
   List<TasksModel> favCompletedTasks = [];
-  int totalDays = 30;
+  int totalDays = 366 * 2;
 
   void getTasks() async {
     allTasks = [];
@@ -42,9 +42,9 @@ class AppCubit extends Cubit<AppStates> {
       DateTime lastDate = allTasks[allTasks.length - 1].date.toDate();
       int totalDaysBetweenFistAndLastDays =
           lastDate.difference(firstDate).inDays;
-      totalDays = totalDaysBetweenFistAndLastDays > 30
-          ? totalDaysBetweenFistAndLastDays
-          : 30;
+      totalDays = totalDaysBetweenFistAndLastDays >= 360
+          ? totalDaysBetweenFistAndLastDays + 1 + 360 * 2
+          : 366 * 2;
     }
     emit(GetAllTasksState());
   }

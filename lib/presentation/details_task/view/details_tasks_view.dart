@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
 import 'package:m_todo_app/app/extension/form_state_extension.dart';
+import 'package:m_todo_app/app/extension/string_extensions.dart';
 import 'package:m_todo_app/app/resources/styles_manger.dart';
 import 'package:m_todo_app/app/resources/value_manger.dart';
 import 'package:m_todo_app/domain/model/tasks_model.dart';
@@ -61,166 +63,176 @@ class _DetailsTasksViewState extends State<DetailsTasksView> {
             DetailsTasksCubit detailsTasksCubit =
                 DetailsTasksCubit.get(context);
 
-            return SingleChildScrollView(
-                child: Padding(
+            return Padding(
               padding: const EdgeInsets.all(AppSize.ap12),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .85,
-                    width: context.width,
+                  Expanded(
                     child: Stack(
                       children: [
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyTextFormField(
-                                controller: _taskTitleController,
-                                title: context.strings().title,
-                                onSaved: (String? val) {
-                                  detailsTasksCubit.addTitle(val ?? "");
-                                },
-                                keyboardType: TextInputType.text,
-                                validator: (String? val) {
-                                  if (val == null || val.isEmpty) {
-                                    return context.strings().required;
-                                  } else if (val.length < 5) {
-                                    return "Title length less than 5";
-                                  } else {
+                        SingleChildScrollView(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                MyTextFormField(
+                                  controller: _taskTitleController,
+                                  title: context.strings().title,
+                                  onSaved: (String? val) {
+                                    detailsTasksCubit.addTitle(val ?? "");
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  validator: (String? val) {
+                                    if (val == null || val.isEmpty) {
+                                      return context.strings().required;
+                                    } else if (val.length < 5) {
+                                      return "Title length less than 5";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(AppSize.ap8)),
+                                MyTextFormField(
+                                  controller: _taskDescriptionController,
+                                  multiline: true,
+                                  title: context.strings().description,
+                                  onSaved: (String? val) {
+                                    detailsTasksCubit.addDescription(val ?? "");
+                                  },
+                                  keyboardType: TextInputType.multiline,
+                                  validator: (String? val) {
+                                    if (val == null || val.isEmpty) {
+                                      return context.strings().required;
+                                    } else if (val.length < 5) {
+                                      return "Title length less than 5";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(AppSize.ap8)),
+                                MyTextFormField(
+                                  controller: _datelineController,
+                                  title: context.strings().date,
+                                  enable: false,
+                                  onTap: () async {
+                                    String val =
+                                        await context.showMyDatePicker();
+                                    _datelineController.text = val;
+                                  },
+                                  onSaved: (String? val) {
+                                    detailsTasksCubit.addDate(val ?? "");
+                                  },
+                                  validator: (val) {
                                     return null;
-                                  }
-                                },
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(AppSize.ap8)),
-                              MyTextFormField(
-                                controller: _taskDescriptionController,
-                                multiline: true,
-                                title: context.strings().description,
-                                onSaved: (String? val) {
-                                  detailsTasksCubit.addDescription(val ?? "");
-                                },
-                                keyboardType: TextInputType.multiline,
-                                validator: (String? val) {
-                                  if (val == null || val.isEmpty) {
-                                    return context.strings().required;
-                                  } else if (val.length < 5) {
-                                    return "Title length less than 5";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(AppSize.ap8)),
-                              MyTextFormField(
-                                controller: _datelineController,
-                                title: context.strings().date,
-                                enable: false,
-                                onTap: () async {
-                                  String val = await context.showMyDatePicker();
-                                  _datelineController.text = val;
-                                },
-                                onSaved: (String? val) {
-                                  detailsTasksCubit.addDate(val ?? "");
-                                },
-                                validator: (val) {
-                                  return null;
-                                },
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.all(AppSize.ap8)),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: MyTextFormField(
-                                      enable: false,
-                                      controller: _startTimeController,
-                                      suffixIcon: const Icon(
-                                          Icons.watch_later_outlined),
-                                      title: context.strings().startTime,
-                                      onTap: () async {
-                                        String val =
-                                            await context.showMyTimePicker();
-                                        _startTimeController.text = val;
-                                      },
-                                      onSaved: (String? val) {
-                                        detailsTasksCubit
-                                            .addStartTime(val ?? "");
-                                      },
-                                      validator: (val) {
-                                        return null;
-                                      },
+                                  },
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.all(AppSize.ap8)),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MyTextFormField(
+                                        enable: false,
+                                        controller: _startTimeController,
+                                        suffixIcon: const Icon(
+                                            Icons.watch_later_outlined),
+                                        title: context.strings().startTime,
+                                        onTap: () async {
+                                          String val =
+                                              await context.showMyTimePicker();
+                                          _startTimeController.text = val;
+                                        },
+                                        onSaved: (String? val) {
+                                          detailsTasksCubit
+                                              .addStartTime(val ?? "");
+                                        },
+                                        validator: (val) {
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppSpacing.ap12),
+                                    Expanded(
+                                      child: MyTextFormField(
+                                        enable: false,
+                                        controller: _endTimeController,
+                                        suffixIcon: const Icon(
+                                            Icons.watch_later_outlined),
+                                        title: context.strings().endTime,
+                                        onTap: () async {
+                                          String val =
+                                              await context.showMyTimePicker();
+                                          _endTimeController.text = val;
+                                        },
+                                        onSaved: (String? val) {
+                                          detailsTasksCubit
+                                              .addEndTime(val ?? "");
+                                        },
+                                        validator: (val) {
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppSize.ap12),
+                                MyText(
+                                  title: context.strings().selectColorTask,
+                                  style: getBoldStyle(fontSize: FontSize.s20),
+                                ),
+                                const SizedBox(height: AppSize.ap8),
+                                InkWell(
+                                  onTap: () {
+                                    context.showAlerts(
+                                      barrierDismissible: true,
+                                      title: context.strings().selectColorTask,
+                                      paddingTitle:
+                                          const EdgeInsets.all(AppSize.ap8),
+                                      textStyle: getRegularStyle(),
+                                      content: [
+                                        Column(
+                                          children: [
+                                            ColorPicker(
+                                              pickerColor: detailsTasksCubit
+                                                  .updateTaskFreezed.color
+                                                  .convertToColor(),
+                                              onColorChanged: (Color value) {
+                                                //print(value.toString());
+                                                detailsTasksCubit
+                                                    .addColor(value.toString());
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: AppSize.ap12,
+                                            ),
+                                            MyElevatedButton(
+                                                title: context.strings().save,
+                                                onPressed: () {
+                                                  context.back();
+                                                })
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: Container(
+                                      width: context.width,
+                                      height: 10,
+                                      color: detailsTasksCubit
+                                          .updateTaskFreezed.color
+                                          .convertToColor(),
                                     ),
                                   ),
-                                  const SizedBox(width: AppSpacing.ap12),
-                                  Expanded(
-                                    child: MyTextFormField(
-                                      enable: false,
-                                      controller: _endTimeController,
-                                      suffixIcon: const Icon(
-                                          Icons.watch_later_outlined),
-                                      title: context.strings().endTime,
-                                      onTap: () async {
-                                        String val =
-                                            await context.showMyTimePicker();
-                                        _endTimeController.text = val;
-                                      },
-                                      onSaved: (String? val) {
-                                        detailsTasksCubit.addEndTime(val ?? "");
-                                      },
-                                      validator: (val) {
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: AppSize.ap12),
-                              MyText(
-                                title: context.strings().selectColorTask,
-                                style: getBoldStyle(fontSize: FontSize.s20),
-                              ),
-                              const SizedBox(height: AppSize.ap4),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  RadioButton<String>(
-                                    activeColor: Colors.red,
-                                    description: context.strings().red,
-                                    value: Colors.red.toString(),
-                                    groupValue: detailsTasksCubit
-                                        .updateTaskFreezed.color,
-                                    onChanged: (val) {
-                                      detailsTasksCubit.addColor(val!);
-                                    },
-                                  ),
-                                  RadioButton<String>(
-                                    activeColor: Colors.blue,
-                                    description: context.strings().blue,
-                                    value: Colors.blue.toString(),
-                                    groupValue: detailsTasksCubit
-                                        .updateTaskFreezed.color,
-                                    onChanged: (val) {
-                                      detailsTasksCubit.addColor(val!);
-                                    },
-                                  ),
-                                  RadioButton<String>(
-                                    activeColor: Colors.orange,
-                                    description: context.strings().orange,
-                                    value: Colors.orange.toString(),
-                                    groupValue: detailsTasksCubit
-                                        .updateTaskFreezed.color,
-                                    onChanged: (val) {
-                                      detailsTasksCubit.addColor(val!);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Positioned(
@@ -242,7 +254,7 @@ class _DetailsTasksViewState extends State<DetailsTasksView> {
                   ),
                 ],
               ),
-            ));
+            );
           },
         ),
       ),
