@@ -28,8 +28,7 @@ extension ExtensionBuildContext on BuildContext {
         firstDate: dateNow,
         lastDate: DateTime.parse(
             DateTime(dateNow.year + 10, dateNow.month - 1, dateNow.day)
-                .toIso8601String()));
-    // var inputFormat = DateFormat('dd/MM/yyyy');
+                .toString()));
 
     return Constants.inputFormat.format(date ?? dateNow);
   }
