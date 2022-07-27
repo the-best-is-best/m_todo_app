@@ -6,6 +6,7 @@ import 'package:m_todo_app/app/extension/string_extensions.dart';
 import 'package:m_todo_app/app/resources/font_manager.dart';
 import 'package:m_todo_app/app/resources/styles_manger.dart';
 import 'package:m_todo_app/app/resources/value_manger.dart';
+import 'package:m_todo_app/main.dart';
 import 'package:m_todo_app/presentation/schedule/cubit/schedule_cubit.dart';
 import 'package:m_todo_app/presentation/schedule/cubit/schedule_states.dart';
 import '../../../app/cubit/app_cubit.dart';
@@ -50,6 +51,7 @@ class _ScheduleViewState extends State<ScheduleView> {
                   children: [
                     const Divider(),
                     DatePicker(
+                      locale: language,
                       appCubit.allTasks.isNotEmpty
                           ? appCubit.allTasks[0].date
                               .toDate()
@@ -64,8 +66,8 @@ class _ScheduleViewState extends State<ScheduleView> {
                               : DateTime.now()
                           : DateTime.now(),
                       dateTextStyle: getRegularStyle(),
-                      monthTextStyle: getRegularStyle(),
-                      dayTextStyle: getLightStyle(fontSize: 0),
+                      monthTextStyle: getRegularStyle(fontSize: 0),
+                      dayTextStyle: getRegularStyle(),
                       selectionColor: Colors.green,
                       selectedTextColor: Colors.white,
                       onDateChange: (date) {

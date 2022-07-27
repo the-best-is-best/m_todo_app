@@ -24,23 +24,24 @@ class BuildPopupMenu extends StatelessWidget {
       menuItems: [
         PopupMenuItem<int>(
           value: 0,
-          enabled: task.status == 0 ? false : true,
           child: Text(
-            context.strings().unCompleted,
-            style: task.status == 0 ? getLightStyle() : getRegularStyle(),
+            task.status == 1
+                ? context.strings().unCompleted
+                : context.strings().completed,
+            style: getRegularStyle(),
           ),
         ),
         PopupMenuItem<int>(
-          enabled: task.status == 1 ? false : true,
           value: 1,
           child: Text(
-            context.strings().completed,
-            style: task.status == 1 ? getLightStyle() : getRegularStyle(),
+            task.fav == 0
+                ? context.strings().favorite
+                : context.strings().unFavorite,
+            style: getRegularStyle(),
           ),
         ),
         PopupMenuItem<int>(
-          enabled: task.status == 2 ? false : true,
-          value: 2,
+          value: 1,
           child: Text(
             task.fav == 0
                 ? context.strings().favorite

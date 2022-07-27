@@ -17,18 +17,13 @@ class QuickAction {
 
   static List<ShortcutItem> items = [];
   static _actionAddNewTask(BuildContext context) => ShortcutItem(
-      type: 'add_new_task',
-      localizedTitle: context.strings().addATask,
-      icon: 'add_new_task');
+        type: 'add_new_task',
+        localizedTitle: context.strings().addATask,
+        icon: 'add_new_task',
+      );
 
   void addItems(BuildContext context) {
     items.add(_actionAddNewTask(context));
-    quickActions.setShortcutItems(items).then((void _) {
-      // setState(() {
-      //   if (shortcut == 'no action set') {
-      //     shortcut = 'actions ready';
-      //   }
-      // });
-    });
+    quickActions.setShortcutItems(items);
   }
 }

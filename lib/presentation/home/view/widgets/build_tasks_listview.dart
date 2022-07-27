@@ -40,7 +40,11 @@ class BuildTasksListView extends StatelessWidget {
         }),
         child: Row(
           children: [
-            BuildSuccessIconInHome(task: task),
+            InkWell(
+                onTap: () {
+                  appCubit.changeStatusTask(task.id, 0);
+                },
+                child: BuildSuccessIconInHome(task: task)),
             const SizedBox(width: AppSize.ap20),
             Text(
               task.title,

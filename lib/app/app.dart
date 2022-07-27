@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +21,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       minTextAdapt: true,
@@ -43,7 +39,6 @@ class _MyAppState extends State<MyApp> {
           locale: Locale(language),
           onGenerateTitle: (BuildContext context) => context.strings().appTitle,
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
           theme: myThemeData(),
           home: const HomeView(),
         ),

@@ -15,7 +15,7 @@ class MyText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: style ?? getRegularStyle(),
+      style: style ?? getRegularStyle(color: Colors.white),
     );
   }
 }

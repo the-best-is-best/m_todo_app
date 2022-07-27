@@ -4,19 +4,12 @@ class ReceivedNotificationModel {
     required this.title,
     required this.body,
     this.payload,
+    required this.dateTime,
   });
 
   final int id;
   final String? title;
   final String? body;
-  final String? payload;
-}
-
-class NotificationDetailsModel {
-  final String channelId;
-  final String channelName;
-  final String channelDescription;
-
-  NotificationDetailsModel(
-      this.channelId, this.channelName, this.channelDescription);
+  final DateTime dateTime;
+  final Map<String, String>? payload;
 }

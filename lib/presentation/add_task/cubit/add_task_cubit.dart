@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_todo_app/app/cubit/app_cubit.dart';
@@ -11,8 +9,8 @@ import 'package:m_todo_app/domain/model/tasks_model.dart';
 import 'package:m_todo_app/presentation/add_task/cubit/add_task_state.dart';
 import 'package:m_todo_app/presentation/freezed/add_task_freezed.dart';
 import 'package:sqflite/sqflite.dart';
+
 import '../../../services/notification_services.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class AddTaskCubit extends Cubit<AddTaskState> {
   AddTaskCubit() : super(AddTaskInitState());
@@ -59,40 +57,40 @@ class AddTaskCubit extends Cubit<AddTaskState> {
 
   void addColor(String color) {
     addTaskFreezed = addTaskFreezed.copyWith(color: color);
-    print(addTaskFreezed.color);
     emit(AddTaskChangeTaskColor());
   }
 
   void addNewTask(BuildContext context) async {
-    String dateTimeScheduleString =
+    String dateTimeStartScheduleString =
         "${addTaskFreezed.date} ${addTaskFreezed.startTime}";
+    DateTime dateTimeStartSchedule = dateTimeStartScheduleString.toDateTime();
 
-    DateTime dateTimeSchedule = dateTimeScheduleString.toDateTime();
-
-    int mill =
-        dateTimeSchedule.difference(tz.TZDateTime.now(tz.local)).inMilliseconds;
-    dateTimeSchedule.add(Duration(milliseconds: mill));
+    String dateTimeEndScheduleString =
+        "${addTaskFreezed.date} ${addTaskFreezed.endTime}";
+    DateTime dateTimeEndSchedule = dateTimeEndScheduleString.toDateTime();
 
     switch (addTaskFreezed.status) {
       case 0:
         // ignore: prefer_const_constructors
-        dateTimeSchedule = dateTimeSchedule.add(Duration(minutes: -10));
+        dateTimeStartSchedule =
+            dateTimeStartSchedule.add(Duration(minutes: -10));
         break;
       case 1:
         // ignore: prefer_const_constructors
-        dateTimeSchedule = dateTimeSchedule.add(Duration(minutes: -30));
+        dateTimeStartSchedule =
+            dateTimeStartSchedule.add(Duration(minutes: -30));
         break;
       case 2:
         // ignore: prefer_const_constructors
-        dateTimeSchedule = dateTimeSchedule.add(Duration(hours: -1));
+        dateTimeStartSchedule = dateTimeStartSchedule.add(Duration(hours: -1));
         break;
       case 3:
         // ignore: prefer_const_constructors
-        dateTimeSchedule = dateTimeSchedule.add(Duration(days: -1));
+        dateTimeStartSchedule = dateTimeStartSchedule.add(Duration(days: -1));
         break;
       default:
     }
-    if (dateTimeSchedule.isBefore(DateTime.now())) {
+    if (dateTimeStartSchedule.isBefore(DateTime.now())) {
       context.showToast(context.strings().errorRemind);
       return;
     }
@@ -114,17 +112,20 @@ class AddTaskCubit extends Cubit<AddTaskState> {
         remind: addTaskFreezed.remind,
         color: addTaskFreezed.color);
     appCubit.newTasksAdded(newTaskData);
-    await di<NotificationServices>().showScheduleNotification(
-      ReceivedNotificationModel(
-          id: id,
-          title: 'New Task started',
-          body: addTaskFreezed.title,
-          payload: jsonEncode(TasksModel.toJsonString(newTaskData))),
-      NotificationDetailsModel(addTaskFreezed.title, addTaskFreezed.title,
-          addTaskFreezed.description),
-      dateTimeSchedule,
-    );
-
+    await di<NotificationServices>().createReminderNotification(
+        ReceivedNotificationModel(
+            title: addTaskFreezed.title,
+            body: addTaskFreezed.description,
+            dateTime: dateTimeStartSchedule,
+            payload: TasksModel.toJsonString(newTaskData),
+            id: id));
+    await di<NotificationServices>().createReminderNotification(
+        ReceivedNotificationModel(
+            title: addTaskFreezed.title,
+            body: "${addTaskFreezed.description} Ended",
+            dateTime: dateTimeEndSchedule,
+            payload: {'id': id.toString()},
+            id: id * 1000));
     context.back();
   }
 }

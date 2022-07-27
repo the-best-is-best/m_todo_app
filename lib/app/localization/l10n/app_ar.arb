@@ -35,5 +35,6 @@
     "detailsTask": "تفاصيل المهمة",
     "updateATask": "حدث هذه المهمة",
     "noTasksAvailable": "لا توجد مهام متاحة",
-    "save": "حفظ"
+    "save": "حفظ",
+    "delete": "حذف"
 }

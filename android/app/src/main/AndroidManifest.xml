@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.michelle_raouf.m_todo_app">
+       <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+       <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+       <uses-permission android:name="android.permission.WAKE_LOCK" />
+
    <application
         android:label="M Todo"
         android:name="${applicationName}"

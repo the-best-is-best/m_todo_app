@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:m_todo_app/app/constant.dart';
 import 'package:m_todo_app/app/extension/string_extensions.dart';
 import 'package:m_todo_app/domain/model/tasks_model.dart';
+import 'package:m_todo_app/main.dart';
 import 'package:m_todo_app/presentation/schedule/cubit/schedule_states.dart';
 
 class ScheduleCubit extends Cubit<ScheduleStates> {
@@ -26,8 +27,8 @@ class ScheduleCubit extends Cubit<ScheduleStates> {
 
   void getTasksByDate(DateTime date) {
     emit(ScheduleLoadTasksStates());
-    dayName = DateFormat('EEEE').format(date);
-    dateSelected = DateFormat('dd MMM, yyyy').format(date);
+    dayName = DateFormat('EEEE', language).format(date);
+    dateSelected = DateFormat('dd MMM, yyyy', language).format(date);
     tasksInDate = [];
     String dateFormat = Constants.inputFormat.format(date);
     for (TasksModel task in allTasks) {

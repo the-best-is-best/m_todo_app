@@ -1,6 +1,6 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_todo_app/app/extension/string_extensions.dart';
-import 'package:m_todo_app/services/notification_services.dart';
 import 'package:sqflite/sqflite.dart';
 import '../di.dart';
 import '../../domain/model/tasks_model.dart';
@@ -57,9 +57,9 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetAllTasksState());
   }
 
-  void changeStatusTask(int taskId, int newStatus) {
+  void changeStatusTask(int taskId, int favOrCompleted) {
     emit(AppLoadingTaskState());
-    if (newStatus == 2) {
+    if (favOrCompleted == 1) {
       int fav = 0;
       TasksModel task = allTasks.firstWhere((e) => e.id == taskId);
       if (task.fav == 0) {
@@ -67,17 +67,36 @@ class AppCubit extends Cubit<AppStates> {
       }
       di<Database>().rawQuery('UPDATE tasks SET fav = $fav WHERE id = $taskId');
     } else {
+      int completed = 0;
+      TasksModel task = allTasks.firstWhere((e) => e.id == taskId);
+      if (task.status == 0) {
+        completed = 1;
+      }
       di<Database>()
-          .rawQuery('UPDATE tasks SET status = $newStatus WHERE id = $taskId');
+          .rawQuery('UPDATE tasks SET status = $completed WHERE id = $taskId');
     }
     getTasks();
   }
 
-  void deleteTask(int taskId) {
+  void updateTaskToCompleted(int taskId) {
+    emit(AppLoadingTaskState());
+
+    int completed = 1;
+    TasksModel task = allTasks.firstWhere((e) => e.id == taskId);
+    if (task.status == 1) {
+      return;
+    }
+    di<Database>()
+        .rawQuery('UPDATE tasks SET status = $completed WHERE id = $taskId');
+
+    getTasks();
+  }
+
+  void deleteTask(int taskId) async {
     di<Database>().rawQuery('DELETE FROM tasks WHERE id =$taskId');
-    di<NotificationServices>()
-        .getFlutterLocalNotificationsPlugin()
-        .cancel(taskId);
+    await AwesomeNotifications().cancelSchedule(taskId);
+    await AwesomeNotifications().cancelSchedule(taskId * 1000);
+
     getTasks();
   }
 }
