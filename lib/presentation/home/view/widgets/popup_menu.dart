@@ -40,15 +40,7 @@ class BuildPopupMenu extends StatelessWidget {
             style: getRegularStyle(),
           ),
         ),
-        PopupMenuItem<int>(
-          value: 1,
-          child: Text(
-            task.fav == 0
-                ? context.strings().favorite
-                : context.strings().unFavorite,
-            style: getRegularStyle(),
-          ),
-        ),
+        
       ],
       onSelected: (int value) {
         cubit.changeStatusTask(task.id, value);
