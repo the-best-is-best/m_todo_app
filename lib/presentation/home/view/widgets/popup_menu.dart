@@ -41,17 +41,19 @@ class BuildPopupMenu extends StatelessWidget {
           ),
         ),
         PopupMenuItem<int>(
-          value: 1,
+          value: 2,
           child: Text(
-            task.fav == 0
-                ? context.strings().favorite
-                : context.strings().unFavorite,
+            context.strings().delete,
             style: getRegularStyle(),
           ),
         ),
       ],
       onSelected: (int value) {
-        cubit.changeStatusTask(task.id, value);
+        if (value != 2) {
+          cubit.changeStatusTask(task.id, value);
+        } else {
+          cubit.deleteTask(task.id);
+        }
       },
       tooltip: "Here's a tip for you.",
       elevation: 12,
