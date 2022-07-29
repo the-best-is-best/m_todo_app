@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_todo_app/app/di.dart';
+import 'package:m_todo_app/services/admob_services.dart';
 
 import 'app/app.dart';
 import 'services/my_bloc_observer.dart';
@@ -14,7 +16,7 @@ bool appLoaded = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await _configureLocalTimeZone();
+
   await AwesomeNotifications()
       .initialize('resource://drawable/res_notification_app_icon', [
     NotificationChannel(
@@ -26,11 +28,11 @@ void main() async {
         channelShowBadge: true)
   ]);
   await GetStorage.init();
-
+  MobileAds.instance.initialize();
+  AdmobServices.initInterstitial();
   await getLanguageDevice();
 
   await initAppModels();
-
   BlocOverrides.runZoned(
     () {
       runApp(Phoenix(child: const MyApp()));

@@ -1,5 +1,13 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:m_todo_app/app/cubit/app_cubit.dart';
+import 'package:m_todo_app/app/cubit/app_state.dart';
 import 'package:m_todo_app/app/di.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
 import 'package:m_todo_app/app/resources/styles_manger.dart';
@@ -11,6 +19,7 @@ import 'package:m_todo_app/presentation/home/view/widgets/app_bar.dart';
 import 'package:m_todo_app/services/notification_services.dart';
 import 'package:m_todo_app/services/quick_action_services.dart';
 import '../../../app/resources/value_manger.dart';
+import '../../../services/admob_services.dart';
 import '../../add_task/view/add_task_view.dart';
 import '../../components/elevated_button.dart';
 import 'pages/favorite_page/page/favorite_page.dart';
@@ -28,6 +37,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    AdmobServices.myBanner.load();
+    AppCubit appCubit = AppCubit.get(context);
+    appCubit.loadAd();
     _controller = TabController(length: 4, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       di<NotificationServices>().showAlertToAllowNotification(context);
@@ -47,53 +59,122 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(100.0),
-            child: MyAppBar(
-              controller: _controller,
-            )),
-        body: SizedBox(
-          height: context.height,
-          child: Stack(
-            children: [
-              SizedBox(
-                height: context.height * .75,
-                child: TabBarView(
-                    controller: _controller,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.ap12),
-                        child: HomePage(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.ap12),
-                        child: CompletedPage(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.ap12),
-                        child: UnCompletedPage(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(AppSize.ap12),
-                        child: FavoritePage(),
-                      ),
-                    ]),
+      child: BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
+        final AppCubit appCubit = AppCubit.get(context);
+        return WillPopScope(
+          onWillPop: () async {
+            AdmobServices.initInterstitial();
+
+            AdmobServices.getAd();
+            context.showAlerts(
+                title: context.strings().doYouWantToClose,
+                textStyle: getRegularStyle(),
+                paddingTitle: const EdgeInsets.all(AppSize.ap12),
+                content: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          child: MyText(
+                            title: context.strings().no,
+                          ),
+                          onPressed: () {
+                            context.back();
+                          }),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          child: MyText(
+                            title: context.strings().yes,
+                          ),
+                          onPressed: () {
+                            exit(0);
+                          })
+                    ],
+                  )
+                ]);
+            return false;
+          },
+          child: Scaffold(
+            appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(100.0),
+                child: MyAppBar(
+                  controller: _controller,
+                )),
+            body: SizedBox(
+              height: context.height,
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: appCubit.displayAdd
+                        ? context.height * .75 -
+                            AdmobServices.myBanner.size.height
+                        : context.height * .75,
+                    child: TabBarView(
+                        controller: _controller,
+                        children: const <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(AppSize.ap12),
+                            child: HomePage(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(AppSize.ap12),
+                            child: CompletedPage(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(AppSize.ap12),
+                            child: UnCompletedPage(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(AppSize.ap12),
+                            child: FavoritePage(),
+                          ),
+                        ]),
+                  ),
+                  Builder(builder: (context) {
+                    return Positioned(
+                      bottom: AdmobServices.adLoaded && appCubit.displayAdd
+                          ? AdmobServices.myBanner.size.height + 10
+                          : 10,
+                      left: 10,
+                      right: 10,
+                      child: MyElevatedButton(
+                          title: context.strings().addATask,
+                          onPressed: () {
+                            context.push(const AddTaskView());
+                          }),
+                    );
+                  }),
+                  BuildCondition(
+                      condition: AdmobServices.adLoaded && appCubit.displayAdd,
+                      builder: (context) {
+                        return Positioned(
+                          bottom: AdmobServices.adLoaded && appCubit.displayAdd
+                              ? 10
+                              : 0,
+                          left: 10,
+                          right: 10,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: AdmobServices.myBanner.size.width.toDouble(),
+                            height:
+                                AdmobServices.myBanner.size.height.toDouble(),
+                            child: AdmobServices.adWidget,
+                          ),
+                        );
+                      })
+                ],
               ),
-              Positioned(
-                bottom: 10,
-                left: 10,
-                right: 10,
-                child: MyElevatedButton(
-                    title: context.strings().addATask,
-                    onPressed: () {
-                      context.push(const AddTaskView());
-                    }),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

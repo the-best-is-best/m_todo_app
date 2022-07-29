@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:m_todo_app/app/cubit/app_cubit.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
 import 'package:m_todo_app/app/resources/font_manager.dart';
 import 'package:m_todo_app/app/resources/styles_manger.dart';
@@ -9,6 +10,7 @@ import 'package:m_todo_app/presentation/schedule/view/schedule_view.dart';
 import 'package:m_todo_app/presentation/search/view/search_view.dart';
 
 import '../../../../main.dart';
+import '../../../../services/admob_services.dart';
 
 class MyAppBar extends StatefulWidget {
   const MyAppBar({
@@ -60,7 +62,11 @@ class _MyAppBarState extends State<MyAppBar> {
                     await box.write('lang', 'en');
                     language = "en";
                   }
-                  Phoenix.rebirth(context);
+                  AppCubit appCubit = AppCubit.get(context);
+                  appCubit.hideAd();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Phoenix.rebirth(context);
+                  });
                 },
                 icon: const Icon(Icons.language))),
       ],

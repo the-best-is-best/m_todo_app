@@ -6,7 +6,6 @@ import '../app/resources/styles_manger.dart';
 import '../app/resources/value_manger.dart';
 import '../domain/model/received_notification.dart';
 import '../domain/model/tasks_model.dart';
-import '../presentation/components/elevated_button.dart';
 import '../presentation/components/text.dart';
 import '../presentation/details_task/view/details_tasks_view.dart';
 
@@ -50,13 +49,25 @@ class NotificationServices {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      MyElevatedButton(
-                          title: context.strings().donotAllow,
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          child: MyText(
+                            title: context.strings().donotAllow,
+                          ),
                           onPressed: () {
                             context.back();
                           }),
-                      MyElevatedButton(
-                          title: context.strings().allow,
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          child: MyText(
+                            title: context.strings().allow,
+                          ),
                           onPressed: () {
                             AwesomeNotifications()
                                 .requestPermissionToSendNotifications()

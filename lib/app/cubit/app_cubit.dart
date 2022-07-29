@@ -1,7 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_todo_app/app/extension/string_extensions.dart';
+import 'package:m_todo_app/main.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../services/admob_services.dart';
 import '../di.dart';
 import '../../domain/model/tasks_model.dart';
 import 'app_state.dart';
@@ -15,6 +19,20 @@ class AppCubit extends Cubit<AppStates> {
   List<TasksModel> unCompletedTasks = [];
   List<TasksModel> favCompletedTasks = [];
   int totalDays = 366 * 2;
+  void loadAd() async {
+    while (AdmobServices.adLoaded == false) {
+      await Future.delayed(const Duration(seconds: 1), () => loadAd());
+    }
+    debugPrint(AdmobServices.adLoaded.toString());
+    displayAdd = true;
+    emit(GetAllTasksState());
+  }
+
+  bool displayAdd = false;
+  void hideAd() {
+    displayAdd = false;
+    emit(GetAllTasksState());
+  }
 
   void getTasks() async {
     allTasks = [];

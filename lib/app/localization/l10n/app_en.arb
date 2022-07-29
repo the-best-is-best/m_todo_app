@@ -44,5 +44,6 @@
     "allowNotification": "Allow Notification",
     "ourAppWouldLikeToSendYouNotifications": "Our App would like to send you notifications.",
     "donotAllow": "Don't Allow",
-    "allow": "Allow"
+    "allow": "Allow",
+    "doYouWantToClose": "Do you want to close?"
 }

@@ -37,7 +37,6 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_colorpicker: ^1.0.3
-  #flutter_local_notifications: ^9.7.0
   flutter_localizations:
     sdk: flutter
   flutter_phoenix: ^1.0.0
@@ -45,11 +44,11 @@ dependencies:
   freezed_annotation: ^2.1.0
   get_it: ^7.2.0
   get_storage: ^2.0.3
+  google_mobile_ads: ^2.0.0
   group_radio_button: ^1.2.0
   intl: ^0.17.0
   json_annotation: ^4.6.0
   quick_actions: ^0.6.0+11
-  #rxdart: ^0.27.5
   sqflite: ^2.0.3
 
 dev_dependencies:

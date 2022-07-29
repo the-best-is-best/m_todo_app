@@ -44,5 +44,6 @@
     "allowNotification": "السماح بالاشعارات",
     "ourAppWouldLikeToSendYouNotifications": "يرغب تطبيقنا في إرسال إشعارات إليك.",
     "donotAllow": "لا تسمح",
-    "allow": "تسمح"
+    "allow": "تسمح",
+    "doYouWantToClose": "هل تريد الاغلاق؟"
 }
