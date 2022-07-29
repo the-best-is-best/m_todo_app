@@ -36,5 +36,13 @@
     "updateATask": "حدث هذه المهمة",
     "noTasksAvailable": "لا توجد مهام متاحة",
     "save": "حفظ",
-    "delete": "حذف"
+    "delete": "حذف",
+    "updateTaskToCompleted": "اكتملت المهمة لتصبح مهمه مكتملة",
+    "doYouWantToMoveTheTaskToCompleteTasks": "هل تريد نقل المهمة لإكمال المهام؟",
+    "yes": "نعم",
+    "no": "لا",
+    "allowNotification": "السماح بالاشعارات",
+    "ourAppWouldLikeToSendYouNotifications": "يرغب تطبيقنا في إرسال إشعارات إليك.",
+    "donotAllow": "لا تسمح",
+    "allow": "تسمح"
 }

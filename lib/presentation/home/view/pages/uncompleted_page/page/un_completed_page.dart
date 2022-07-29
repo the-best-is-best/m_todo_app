@@ -8,6 +8,7 @@ import '../../../../../../app/cubit/app_state.dart';
 import '../../../../../../app/resources/value_manger.dart';
 import '../../../../../components/text.dart';
 import '../../../widgets/build_tasks_listview.dart';
+import '../../../widgets/no_tasks_avalible.dart';
 
 class UnCompletedPage extends StatelessWidget {
   const UnCompletedPage({Key? key}) : super(key: key);
@@ -18,22 +19,19 @@ class UnCompletedPage extends StatelessWidget {
 
     return BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
       return BuildCondition(
-        condition: appCubit.unCompletedTasks.isNotEmpty,
-        builder: (context) => ListView.separated(
-          shrinkWrap: true,
-          itemCount: appCubit.unCompletedTasks.length,
-          itemBuilder: (context, index) => BuildTasksListView(
-              appCubit: appCubit, task: appCubit.unCompletedTasks[index]),
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: AppSize.ap20,
-            );
-          },
-        ),
-        fallback: (context) => Center(
-          child: MyText(title: context.strings().noTasksAvailable),
-        ),
-      );
+          condition: appCubit.unCompletedTasks.isNotEmpty,
+          builder: (context) => ListView.separated(
+                shrinkWrap: true,
+                itemCount: appCubit.unCompletedTasks.length,
+                itemBuilder: (context, index) => BuildTasksListView(
+                    appCubit: appCubit, task: appCubit.unCompletedTasks[index]),
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    height: AppSize.ap20,
+                  );
+                },
+              ),
+          fallback: (context) => const NoTasksAvailable());
     });
   }
 }

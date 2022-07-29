@@ -8,6 +8,7 @@ import '../../../../../../app/cubit/app_state.dart';
 import '../../../../../../app/resources/value_manger.dart';
 import '../../../../../components/text.dart';
 import '../../../widgets/build_tasks_listview.dart';
+import '../../../widgets/no_tasks_avalible.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -29,9 +30,7 @@ class FavoritePage extends StatelessWidget {
             );
           },
         ),
-        fallback: (context) => Center(
-          child: MyText(title: context.strings().noTasksAvailable),
-        ),
+        fallback: (context) => const NoTasksAvailable(),
       );
     });
   }

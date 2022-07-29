@@ -36,5 +36,13 @@
     "updateATask": "Update this Task",
     "noTasksAvailable": "No Tasks Available",
     "save": "Save",
-    "delete": "Delete"
+    "delete": "Delete",
+    "updateTaskToCompleted": "Update Task to completed",
+    "doYouWantToMoveTheTaskToCompleteTasks": "Do you want to move the task to complete Tasks?",
+    "yes": "Yes",
+    "no": "No",
+    "allowNotification": "Allow Notification",
+    "ourAppWouldLikeToSendYouNotifications": "Our App would like to send you notifications.",
+    "donotAllow": "Don't Allow",
+    "allow": "Allow"
 }

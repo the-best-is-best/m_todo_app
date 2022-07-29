@@ -73,12 +73,14 @@ class AddTaskCubit extends Cubit<AddTaskState> {
       case 0:
         // ignore: prefer_const_constructors
         dateTimeStartSchedule =
-            dateTimeStartSchedule.add(Duration(minutes: -10));
+            dateTimeStartSchedule.add(const Duration(minutes: -10));
+        dateTimeEndSchedule =
+            dateTimeEndSchedule.add(const Duration(minutes: -10));
         break;
       case 1:
         // ignore: prefer_const_constructors
         dateTimeStartSchedule =
-            dateTimeStartSchedule.add(Duration(minutes: -30));
+            dateTimeStartSchedule.add(const Duration(minutes: -30));
         break;
       case 2:
         // ignore: prefer_const_constructors

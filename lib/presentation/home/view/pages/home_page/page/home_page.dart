@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_todo_app/app/cubit/app_cubit.dart';
 import 'package:m_todo_app/app/cubit/app_state.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
+import 'package:m_todo_app/app/resources/styles_manger.dart';
 import 'package:m_todo_app/app/resources/value_manger.dart';
 import 'package:m_todo_app/presentation/components/text.dart';
 import '../../../widgets/build_tasks_listview.dart';
+import '../../../widgets/no_tasks_avalible.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,12 +38,10 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            fallback: (context) => Center(
-              child: MyText(title: context.strings().noTasksAvailable),
-            ),
+            fallback: (context) => const NoTasksAvailable(),
           );
         },
-        fallback: (context) => Center(child: CircularProgressIndicator()),
+        fallback: (context) => const Center(child: CircularProgressIndicator()),
       );
     });
   }
