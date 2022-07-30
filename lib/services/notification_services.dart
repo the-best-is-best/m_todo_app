@@ -51,6 +51,7 @@ class NotificationServices {
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            primary: Colors.grey,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),

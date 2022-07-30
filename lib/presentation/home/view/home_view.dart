@@ -76,6 +76,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            primary: Colors.grey,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                           ),

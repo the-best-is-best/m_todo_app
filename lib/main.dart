@@ -30,7 +30,7 @@ void main() async {
   await GetStorage.init();
   MobileAds.instance.initialize();
   AdmobServices.initInterstitial();
-  await getLanguageDevice();
+  await getLanguage();
 
   await initAppModels();
   BlocOverrides.runZoned(
@@ -41,7 +41,7 @@ void main() async {
   );
 }
 
-Future getLanguageDevice() async {
+Future getLanguage() async {
   final box = GetStorage();
 
   if (box.read('lang') == null) {
