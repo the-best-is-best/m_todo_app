@@ -21,6 +21,7 @@
     "selectEndTime": "اختيار تاريخ النهاية",
     "timeStartAfterThanEndTime": "وقت البداية اكبر من وقت النهاية",
     "timeEndLessThanStartTime": "وقت النهاية اصغر من وقت البداية",
+    "noneMinBefore": "بدون",
     "tenMinBefore": "قبل 10 دقائق",
     "thirtyMinBefore": "قبل 30 دقيقة",
     "oneHourBefore": "قبل ساعة واحدة",

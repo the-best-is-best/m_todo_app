@@ -1,10 +1,7 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:m_todo_app/app/cubit/app_cubit.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
 import 'package:m_todo_app/app/themes/theme_data.dart';

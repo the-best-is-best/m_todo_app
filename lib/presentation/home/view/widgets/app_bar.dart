@@ -10,7 +10,6 @@ import 'package:m_todo_app/presentation/schedule/view/schedule_view.dart';
 import 'package:m_todo_app/presentation/search/view/search_view.dart';
 
 import '../../../../main.dart';
-import '../../../../services/admob_services.dart';
 
 class MyAppBar extends StatefulWidget {
   const MyAppBar({
@@ -62,6 +61,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     await box.write('lang', 'en');
                     language = "en";
                   }
+                  if (!mounted) return;
                   AppCubit appCubit = AppCubit.get(context);
                   appCubit.hideAd();
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -70,27 +70,19 @@ class _MyAppBarState extends State<MyAppBar> {
                 },
                 icon: const Icon(Icons.language))),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0.0),
-        child: Column(
-          children: [
-            const Divider(),
-            TabBar(
-              controller: widget.controller,
-              isScrollable: true,
-              labelColor: Colors.black,
-              labelStyle: getRegularStyle(color: Colors.black),
-              unselectedLabelStyle: getLightStyle(),
-              indicatorColor: Colors.black,
-              tabs: [
-                Tab(child: Text(context.strings().all)),
-                Tab(child: Text(context.strings().completed)),
-                Tab(child: Text(context.strings().unCompleted)),
-                Tab(child: Text(context.strings().favorite)),
-              ],
-            ),
-          ],
-        ),
+      bottom: TabBar(
+        controller: widget.controller,
+        isScrollable: true,
+        labelColor: Colors.black,
+        labelStyle: getRegularStyle(color: Colors.black),
+        unselectedLabelStyle: getLightStyle(),
+        indicatorColor: Colors.black,
+        tabs: [
+          Tab(child: Text(context.strings().all)),
+          Tab(child: Text(context.strings().completed)),
+          Tab(child: Text(context.strings().unCompleted)),
+          Tab(child: Text(context.strings().favorite)),
+        ],
       ),
     );
   }

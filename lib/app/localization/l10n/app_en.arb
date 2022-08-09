@@ -21,6 +21,7 @@
     "selectEndTime": "Select End Time",
     "timeStartAfterThanEndTime": "Time start > end time",
     "timeEndLessThanStartTime": "Time end < start time",
+    "noneMinBefore": "None",
     "tenMinBefore": "10 min before",
     "thirtyMinBefore": "30 min before",
     "oneHourBefore": "1 hour before",

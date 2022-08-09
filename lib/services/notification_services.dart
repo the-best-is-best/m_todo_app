@@ -102,7 +102,9 @@ class NotificationServices {
         !notification!.body!.contains('Ended')) {
       Map<String, String> payloadMap = notification.payload!;
       TasksModel taskNotification = TasksModel.fromJsonString(payloadMap);
-      context.push(const DetailsTasksView(), arguments: taskNotification);
+      context.push(DetailsTasksView(
+        task: taskNotification,
+      ));
     } else if (notification?.payload != null &&
         notification!.body!.contains('Ended')) {
       context.showAlerts(

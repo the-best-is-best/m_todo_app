@@ -1,7 +1,7 @@
+import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
 import 'package:m_todo_app/app/extension/form_state_extension.dart';
 import 'package:m_todo_app/app/extension/string_extensions.dart';
@@ -28,6 +28,10 @@ class _AddTaskViewState extends State<AddTaskView> {
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +41,12 @@ class _AddTaskViewState extends State<AddTaskView> {
         elevation: 1,
       ),
       body: BlocProvider(
-        create: (context) => AddTaskCubit(),
+        create: (context) => AddTaskCubit()..loadAd(),
         child: BlocBuilder<AddTaskCubit, AddTaskState>(
           builder: (context, state) {
             AddTaskCubit addTaskCubit = AddTaskCubit.get(context);
-
+            AddTaskCubit.myBanner.load();
+            addTaskCubit.loadAd();
             return Padding(
               padding: const EdgeInsets.all(AppSize.ap12),
               child: Column(
@@ -50,7 +55,10 @@ class _AddTaskViewState extends State<AddTaskView> {
                     child: Stack(
                       children: [
                         SizedBox(
-                          height: context.height * .80,
+                          height: AddTaskCubit.adLoaded
+                              ? context.height * .80 -
+                                  AddTaskCubit.myBanner.size.height
+                              : context.height * .80,
                           width: context.width,
                           child: SingleChildScrollView(
                             child: Form(
@@ -255,12 +263,20 @@ class _AddTaskViewState extends State<AddTaskView> {
                                           value: 0,
                                           child: MyText(
                                             title:
-                                                context.strings().tenMinBefore,
+                                                context.strings().noneMinBefore,
                                             style: getRegularStyle(),
                                           ),
                                         ),
                                         DropdownMenuItem(
                                           value: 1,
+                                          child: MyText(
+                                            title:
+                                                context.strings().tenMinBefore,
+                                            style: getRegularStyle(),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2,
                                           child: MyText(
                                             title: context
                                                 .strings()
@@ -269,7 +285,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                                           ),
                                         ),
                                         DropdownMenuItem(
-                                          value: 2,
+                                          value: 3,
                                           child: MyText(
                                             title:
                                                 context.strings().oneHourBefore,
@@ -277,7 +293,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                                           ),
                                         ),
                                         DropdownMenuItem(
-                                          value: 3,
+                                          value: 4,
                                           child: MyText(
                                             title:
                                                 context.strings().oneDayBefore,
@@ -349,7 +365,9 @@ class _AddTaskViewState extends State<AddTaskView> {
                           ),
                         ),
                         Positioned(
-                          bottom: 0,
+                          bottom: AddTaskCubit.adLoaded
+                              ? AddTaskCubit.myBanner.size.height + 10
+                              : 0,
                           right: 5,
                           left: 5,
                           child: MyElevatedButton(
@@ -362,6 +380,23 @@ class _AddTaskViewState extends State<AddTaskView> {
                                 addTaskCubit.addNewTask(context);
                               }),
                         ),
+                        BuildCondition(
+                            condition: AddTaskCubit.adLoaded,
+                            builder: (context) {
+                              return Positioned(
+                                bottom: 0,
+                                left: 10,
+                                right: 10,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: AddTaskCubit.myBanner.size.width
+                                      .toDouble(),
+                                  height: AddTaskCubit.myBanner.size.height
+                                      .toDouble(),
+                                  child: AddTaskCubit.adWidget,
+                                ),
+                              );
+                            })
                       ],
                     ),
                   ),

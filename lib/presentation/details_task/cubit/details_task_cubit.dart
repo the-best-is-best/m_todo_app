@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../../app/cubit/app_cubit.dart';
 import '../../../app/di.dart';
 import '../../freezed/add_task_freezed.dart';
+import '../../schedule/cubit/schedule_cubit.dart';
 
 class DetailsTasksCubit extends Cubit<DetailsTasksStates> {
   DetailsTasksCubit() : super(DetailsTasksInitState());
@@ -89,5 +90,15 @@ class DetailsTasksCubit extends Cubit<DetailsTasksStates> {
 
     appCubit.getTasks();
     context.back();
+  }
+
+  void updateStatus(BuildContext context, int taskId,
+      {ScheduleCubit? scheduleCubit}) async {
+    AppCubit appCubit = AppCubit.get(context);
+    await appCubit.changeStatusTask(taskId, 0);
+    if (scheduleCubit != null) {
+      scheduleCubit.removeTasks();
+    }
+    emit(DetailsTaskChangeTaskColor());
   }
 }

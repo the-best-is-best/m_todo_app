@@ -3,9 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_todo_app/app/extension/string_extensions.dart';
-import 'package:m_todo_app/main.dart';
 import 'package:sqflite/sqflite.dart';
-import '../../services/admob_services.dart';
 import '../di.dart';
 import '../../domain/model/tasks_model.dart';
 import 'app_state.dart';
@@ -19,19 +17,43 @@ class AppCubit extends Cubit<AppStates> {
   List<TasksModel> unCompletedTasks = [];
   List<TasksModel> favCompletedTasks = [];
   int totalDays = 366 * 2;
+  static bool adLoaded = false;
+  static final BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-7284367511062855/6466580005',
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: listenerBanner,
+  );
+  static final BannerAdListener listenerBanner = BannerAdListener(
+    // Called when an ad is successfully received.
+    onAdLoaded: (Ad ad) => adLoaded = true,
+    // Called when an ad request failed.
+    onAdFailedToLoad: (Ad ad, LoadAdError error) {
+      // adLoaded = false;
+      ad.dispose();
+      debugPrint('Ad failed to load: $error');
+    },
+    // Called when an ad opens an overlay that covers the screen.
+    onAdOpened: (Ad ad) => debugPrint('Ad opened.'),
+    // Called when an ad removes an overlay that covers the screen.
+    onAdClosed: (Ad ad) => debugPrint('Ad closed.'),
+    // Called when an impression occurs on the ad.
+    onAdImpression: (Ad ad) => debugPrint('Ad impression.'),
+  );
+  static AdWidget adWidget = AdWidget(ad: myBanner);
   void loadAd() async {
-    while (AdmobServices.adLoaded == false) {
+    while (adLoaded == false) {
       await Future.delayed(const Duration(seconds: 1), () => loadAd());
     }
-    debugPrint(AdmobServices.adLoaded.toString());
-    displayAdd = true;
-    emit(GetAllTasksState());
+    debugPrint(adLoaded.toString());
+    adLoaded = true;
+    emit(LoadADState());
   }
 
-  bool displayAdd = false;
   void hideAd() {
-    displayAdd = false;
-    emit(GetAllTasksState());
+    adLoaded = false;
+    myBanner.dispose();
+    emit(LoadADState());
   }
 
   void getTasks() async {
@@ -55,6 +77,7 @@ class AppCubit extends Cubit<AppStates> {
         favCompletedTasks.add(TasksModel.fromJson(value));
       }
     }
+
     if (allTasks.isNotEmpty) {
       DateTime firstDate = allTasks[0].date.toDate();
       DateTime lastDate = allTasks[allTasks.length - 1].date.toDate();
@@ -75,7 +98,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetAllTasksState());
   }
 
-  void changeStatusTask(int taskId, int favOrCompleted) {
+  Future changeStatusTask(int taskId, int favOrCompleted) async {
     emit(AppLoadingTaskState());
     if (favOrCompleted == 1) {
       int fav = 0;
@@ -83,14 +106,15 @@ class AppCubit extends Cubit<AppStates> {
       if (task.fav == 0) {
         fav = 1;
       }
-      di<Database>().rawQuery('UPDATE tasks SET fav = $fav WHERE id = $taskId');
+      await di<Database>()
+          .rawQuery('UPDATE tasks SET fav = $fav WHERE id = $taskId');
     } else {
       int completed = 0;
       TasksModel task = allTasks.firstWhere((e) => e.id == taskId);
       if (task.status == 0) {
         completed = 1;
       }
-      di<Database>()
+      await di<Database>()
           .rawQuery('UPDATE tasks SET status = $completed WHERE id = $taskId');
     }
     getTasks();

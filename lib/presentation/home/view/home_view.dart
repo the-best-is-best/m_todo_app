@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_todo_app/app/cubit/app_cubit.dart';
 import 'package:m_todo_app/app/cubit/app_state.dart';
 import 'package:m_todo_app/app/di.dart';
@@ -37,7 +34,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    AdmobServices.myBanner.load();
+    AppCubit.myBanner.load();
+    AppCubit.myBanner.request;
+
     AppCubit appCubit = AppCubit.get(context);
     appCubit.loadAd();
     _controller = TabController(length: 4, vsync: this);
@@ -60,47 +59,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     return DefaultTabController(
       length: 4,
       child: BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
-        final AppCubit appCubit = AppCubit.get(context);
         return WillPopScope(
           onWillPop: () async {
-            AdmobServices.initInterstitial();
-
-            AdmobServices.getAd();
-            context.showAlerts(
-                title: context.strings().doYouWantToClose,
-                textStyle: getRegularStyle(),
-                paddingTitle: const EdgeInsets.all(AppSize.ap12),
-                content: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          child: MyText(
-                            title: context.strings().no,
-                          ),
-                          onPressed: () {
-                            context.back();
-                          }),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                          child: MyText(
-                            title: context.strings().yes,
-                          ),
-                          onPressed: () {
-                            exit(0);
-                          })
-                    ],
-                  )
-                ]);
-            return false;
+            return closeApp(context);
           },
           child: Scaffold(
             appBar: PreferredSize(
@@ -113,9 +74,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               child: Stack(
                 children: [
                   SizedBox(
-                    height: appCubit.displayAdd
-                        ? context.height * .75 -
-                            AdmobServices.myBanner.size.height
+                    height: AppCubit.adLoaded
+                        ? context.height * .75 - AppCubit.myBanner.size.height
                         : context.height * .75,
                     child: TabBarView(
                         controller: _controller,
@@ -140,8 +100,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                   ),
                   Builder(builder: (context) {
                     return Positioned(
-                      bottom: AdmobServices.adLoaded && appCubit.displayAdd
-                          ? AdmobServices.myBanner.size.height + 10
+                      bottom: AppCubit.adLoaded && AppCubit.adLoaded
+                          ? AppCubit.myBanner.size.height + 10
                           : 10,
                       left: 10,
                       right: 10,
@@ -153,20 +113,17 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                     );
                   }),
                   BuildCondition(
-                      condition: AdmobServices.adLoaded && appCubit.displayAdd,
+                      condition: AppCubit.adLoaded,
                       builder: (context) {
                         return Positioned(
-                          bottom: AdmobServices.adLoaded && appCubit.displayAdd
-                              ? 10
-                              : 0,
+                          bottom: AppCubit.adLoaded ? 10 : 0,
                           left: 10,
                           right: 10,
                           child: Container(
                             alignment: Alignment.center,
-                            width: AdmobServices.myBanner.size.width.toDouble(),
-                            height:
-                                AdmobServices.myBanner.size.height.toDouble(),
-                            child: AdmobServices.adWidget,
+                            width: AppCubit.myBanner.size.width.toDouble(),
+                            height: AppCubit.myBanner.size.height.toDouble(),
+                            child: AppCubit.adWidget,
                           ),
                         );
                       })
@@ -177,5 +134,46 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         );
       }),
     );
+  }
+
+  bool closeApp(BuildContext context) {
+    AdmobServices.initInterstitial();
+
+    AdmobServices.getAd();
+    context.showAlerts(
+        title: context.strings().doYouWantToClose,
+        textStyle: getRegularStyle(),
+        paddingTitle: const EdgeInsets.all(AppSize.ap12),
+        content: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
+                  child: MyText(
+                    title: context.strings().no,
+                  ),
+                  onPressed: () {
+                    context.back();
+                  }),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
+                  child: MyText(
+                    title: context.strings().yes,
+                  ),
+                  onPressed: () {
+                    exit(0);
+                  })
+            ],
+          )
+        ]);
+    return false;
   }
 }

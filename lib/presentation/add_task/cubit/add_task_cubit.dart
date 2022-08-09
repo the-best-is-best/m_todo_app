@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:m_todo_app/app/cubit/app_cubit.dart';
 import 'package:m_todo_app/app/di.dart';
 import 'package:m_todo_app/app/extension/context_extension.dart';
@@ -9,10 +10,47 @@ import 'package:m_todo_app/domain/model/tasks_model.dart';
 import 'package:m_todo_app/presentation/add_task/cubit/add_task_state.dart';
 import 'package:m_todo_app/presentation/freezed/add_task_freezed.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../../../services/notification_services.dart';
 
 class AddTaskCubit extends Cubit<AddTaskState> {
+  static bool adLoaded = false;
+  static final BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-7284367511062855/6466580005',
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: listenerBanner,
+  );
+  static final BannerAdListener listenerBanner = BannerAdListener(
+    // Called when an ad is successfully received.
+    onAdLoaded: (Ad ad) => adLoaded = true,
+    // Called when an ad request failed.
+    onAdFailedToLoad: (Ad ad, LoadAdError error) {
+      adLoaded = false;
+      ad.dispose();
+      debugPrint('Ad failed to load: $error');
+    },
+    // Called when an ad opens an overlay that covers the screen.
+    onAdOpened: (Ad ad) => debugPrint('Ad opened.'),
+    // Called when an ad removes an overlay that covers the screen.
+    onAdClosed: (Ad ad) => debugPrint('Ad closed.'),
+    // Called when an impression occurs on the ad.
+    onAdImpression: (Ad ad) => debugPrint('Ad impression.'),
+  );
+  static AdWidget adWidget = AdWidget(ad: myBanner);
+  void loadAd() async {
+    while (adLoaded == false) {
+      await Future.delayed(const Duration(seconds: 1), () => loadAd());
+    }
+    debugPrint(adLoaded.toString());
+    adLoaded = true;
+    emit(LoadADState());
+  }
+
+  void hideAd() {
+    adLoaded = false;
+    emit(LoadADState());
+  }
+
   AddTaskCubit() : super(AddTaskInitState());
   static AddTaskCubit get(context) => BlocProvider.of<AddTaskCubit>(context);
 
@@ -72,20 +110,24 @@ class AddTaskCubit extends Cubit<AddTaskState> {
     switch (addTaskFreezed.status) {
       case 0:
         // ignore: prefer_const_constructors
-        dateTimeStartSchedule =
-            dateTimeStartSchedule.add(const Duration(minutes: -10));
 
         break;
       case 1:
         // ignore: prefer_const_constructors
         dateTimeStartSchedule =
-            dateTimeStartSchedule.add(const Duration(minutes: -30));
+            dateTimeStartSchedule.add(const Duration(minutes: -10));
+
         break;
       case 2:
         // ignore: prefer_const_constructors
-        dateTimeStartSchedule = dateTimeStartSchedule.add(Duration(hours: -1));
+        dateTimeStartSchedule =
+            dateTimeStartSchedule.add(const Duration(minutes: -30));
         break;
       case 3:
+        // ignore: prefer_const_constructors
+        dateTimeStartSchedule = dateTimeStartSchedule.add(Duration(hours: -1));
+        break;
+      case 4:
         // ignore: prefer_const_constructors
         dateTimeStartSchedule = dateTimeStartSchedule.add(Duration(days: -1));
         break;

@@ -8,7 +8,7 @@ import 'package:m_todo_app/app/resources/styles_manger.dart';
 import 'package:m_todo_app/app/resources/value_manger.dart';
 import 'package:m_todo_app/presentation/components/text.dart';
 import '../../../widgets/build_tasks_listview.dart';
-import '../../../widgets/no_tasks_avalible.dart';
+import '../../../widgets/no_tasks_available.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

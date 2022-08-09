@@ -24,7 +24,9 @@ class BuildTasksListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push(const DetailsTasksView(), arguments: task);
+        context.push(DetailsTasksView(
+          task: task,
+        ));
       },
       child: Dismissible(
         key: Key(task.id.toString()),

@@ -5,3 +5,5 @@ class AppInitState extends AppStates {}
 class AppLoadingTaskState extends AppStates {}
 
 class GetAllTasksState extends AppStates {}
+
+class LoadADState extends AppStates {}
