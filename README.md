@@ -14,7 +14,7 @@
 <img src="github_assets/2.jpg" width="40%"></img>
 
 <img src="github_assets/3.jpg" width="40%"/>
-<span width="1%"></span>
+<span></span>
 <img src="github_assets/4.jpg" width="40%"/>
 
 # Favorite Tasks
