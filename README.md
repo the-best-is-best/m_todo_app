@@ -2,6 +2,7 @@
 
 * Todo App.
 ## video
+<p align="center">
 
 [<img src="github_assets/video_thum.jpg" height:300>](https://youtu.be/9nxOKvtX4V4
  "Now in Android: 25 or above")
@@ -9,7 +10,7 @@
 
 ## images
 # All Tasks
-![Todo App1](github_assets/1.jpg?raw=true) 
+![Todo App1](github_assets/1.jpg?raw=true&height:300) 
 # Completed Tasks
 ![Todo App2](github_assets/2.jpg?raw=true)
 # UnCompleted Tasks
@@ -35,3 +36,4 @@
 # Edit Task Arabic
 ![Todo App9](github_assets/9.jpg?raw=true)
 
+</p>
