@@ -9,12 +9,14 @@
 
 
 ## images
-# All Tasks
-![Todo App1](github_assets/1.jpg?raw=true&height:300) 
-# Completed Tasks
-![Todo App2](github_assets/2.jpg?raw=true)
-# UnCompleted Tasks
-![Todo App3](github_assets/3.jpg?raw=true)
+<img src="github_assets/1.jpg" width="40%"></img>
+<q></q>
+<img src="github_assets/2.jpg" width="40%"></img>
+
+<img src="github_assets/3.jpg" width="40%"/>
+<span width="5%"></span>
+<img src="github_assets/4.jpg" width="40%"/>
+
 # Favorite Tasks
 ![Todo App4](github_assets/4.jpg?raw=true)
 # Add a Task
